@@ -11,6 +11,14 @@ export async function POST(req: NextRequest) {
   try {
     console.log('Checkout API called')
 
+    // Log environment info
+    console.log('Environment:', {
+      nodeEnv: process.env.NODE_ENV,
+      appUrl: process.env.NEXT_PUBLIC_APP_URL,
+      hasDodoApiKey: !!process.env.DODO_PAYMENTS_API_KEY,
+      dodoApiKeyPrefix: process.env.DODO_PAYMENTS_API_KEY?.substring(0, 10) + '...',
+    })
+
     // Get headers first
     const reqHeaders = await headers()
     console.log('Request headers:', {
@@ -46,39 +54,48 @@ export async function POST(req: NextRequest) {
     if (planId === 'pro') {
       const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
       console.log('Creating checkout session with appUrl:', appUrl)
-      console.log('Dodo API key present:', !!process.env.DODO_API_KEY)
+      console.log('Dodo API key present:', !!process.env.DODO_PAYMENTS_API_KEY)
 
       // Use the customer email from session or request
       const customerEmail = email || session.user.email
       const customerName = name || session.user.name || undefined
 
       console.log('Customer:', { email: customerEmail, name: customerName })
+      console.log('Product ID:', actualProductId)
+
+      // Log what we're about to send to Dodo
+      const checkoutPayload = {
+        product_cart: [
+          {
+            product_id: actualProductId,
+            quantity: 1,
+          },
+        ],
+        customer: {
+          email: customerEmail,
+          name: customerName,
+        },
+        return_url: `${appUrl}/dashboard?checkout=success`,
+      }
+      console.log('Checkout payload:', JSON.stringify(checkoutPayload, null, 2))
 
       try {
-        const checkoutSession = await dodo.checkoutSessions.create({
-          product_cart: [
-            {
-              product_id: actualProductId,
-              quantity: 1,
-            },
-          ],
-          customer: {
-            email: customerEmail,
-            name: customerName,
-          },
-          return_url: `${appUrl}/dashboard?checkout=success`,
-        })
+        const checkoutSession = await dodo.checkoutSessions.create(checkoutPayload)
 
-        console.log('Checkout session created:', checkoutSession)
+        console.log('Checkout session created successfully:', {
+          hasCheckoutUrl: !!checkoutSession.checkout_url,
+        })
 
         return NextResponse.json({
           checkoutUrl: checkoutSession.checkout_url,
         })
       } catch (dodoError: any) {
         console.error('Dodo API error:', dodoError)
+        console.error('Dodo error type:', dodoError.constructor.name)
         console.error('Dodo error status:', dodoError.status)
         console.error('Dodo error message:', dodoError.message)
         console.error('Dodo error response:', dodoError.response)
+        console.error('Dodo error cause:', dodoError.cause)
         
         // Check if this is a 401 authentication error
         if (dodoError.status === 401) {
