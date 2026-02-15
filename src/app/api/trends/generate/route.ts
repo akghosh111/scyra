@@ -1,15 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
-import { PrismaClient } from '@prisma/client'
-import { PrismaPg } from '@prisma/adapter-pg'
+import prisma from '@/lib/prisma'
 import Exa from 'exa-js'
 import { generateSearchQueries, analyzeTrendsWithGemini, generateTrendMetadata } from '@/lib/gemini-service'
 
-const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL!,
-})
-
-const prisma = new PrismaClient({ adapter })
 const exa = new Exa(process.env.EXA_API_KEY!)
 
 // Rate limiting cache
@@ -73,7 +67,7 @@ export async function POST(req: NextRequest) {
           userId: session.user.id,
           plan: 'FREE',
           credits: 5,
-          monthlyCreditLimit: 5,
+          totalCreditLimit: 5,
         }
       })
 

@@ -2,12 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { dodo } from '@/lib/dodo'
 import { headers } from 'next/headers'
-import { PrismaClient } from '@prisma/client'
-import { PrismaPg } from '@prisma/adapter-pg'
-import pg from 'pg'
-
-const adapter = new PrismaPg(pg)
-const prisma = new PrismaClient({ adapter })
+import prisma from '@/lib/prisma'
 
 export async function POST(req: NextRequest) {
   try {
