@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from 'react'
 import FAQ from '@/components/FAQ'
 import Navbar from '@/components/Navbar'
+import { useRouter } from 'next/navigation'
 
 interface CardPosition {
   x: number
@@ -11,6 +12,7 @@ interface CardPosition {
 }
 
 export default function Home() {
+  const router = useRouter()
   const [mousePosition, setMousePosition] = useState({ x: -100, y: -100 })
   const heroRef = useRef<HTMLDivElement>(null)
   const [cards, setCards] = useState<CardPosition[]>([
@@ -22,6 +24,16 @@ export default function Home() {
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null)
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
   const containerRef = useRef<HTMLDivElement>(null)
+
+  const handlePlanClick = async (planId: string) => {
+    if (planId === 'free') {
+      router.push('/login')
+      return
+    }
+
+    // For pro plan, redirect to signup with plan parameter
+    router.push(`/signup?plan=${planId}`)
+  }
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -579,6 +591,7 @@ export default function Home() {
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               {[
                 {
+                  id: 'free',
                   name: 'Free',
                   price: '$0',
                   period: '/month',
@@ -588,12 +601,13 @@ export default function Home() {
                   popular: false,
                 },
                 {
+                  id: 'pro',
                   name: 'Pro',
-                  price: '$25',
+                  price: '$12',
                   period: '/month',
                   description: 'For serious creators',
-                  features: ['100 trend scans/month', 'Auto-renews monthly', 'Advanced AI insights', 'Weekly trend reports', 'Content idea generator', 'Priority support'],
-                  cta: 'Start 7-day free trial',
+                  features: ['50 trend scans/month', 'Auto-renews monthly', 'Advanced AI insights', 'Weekly trend reports', 'Content idea generator', 'Priority support'],
+                  cta: 'Upgrade to Pro',
                   popular: true,
                 },
               ].map((plan, index) => (
@@ -623,6 +637,7 @@ export default function Home() {
                     ))}
                   </ul>
                   <button
+                    onClick={() => handlePlanClick(plan.id)}
                     className={`w-full py-3 rounded-full font-medium transition-all duration-150 hover:scale-105 ${
                       plan.popular
                         ? 'bg-charcoal text-white hover:bg-charcoal-light hover:shadow-lg'

@@ -18,18 +18,18 @@ const PLANS = [
   {
     id: 'pro',
     name: 'Pro',
-    price: '$25',
-    pricePerMonth: '$25/month',
+    price: '$12',
+    pricePerMonth: '$12/month',
     description: 'For serious creators',
     features: [
-      '100 trend scans/month',
+      '50 trend scans/month',
       'Auto-renews monthly',
       'Advanced AI insights',
       'Weekly trend reports',
       'Content idea generator',
       'Priority support',
     ],
-    creditLimit: 100,
+    creditLimit: 50,
     featured: true,
   },
 ]

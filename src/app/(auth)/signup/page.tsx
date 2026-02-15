@@ -1,10 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { authClient } from '@/lib/auth-client'
 
-export default function SignupPage() {
+function SignupContent() {
+  const searchParams = useSearchParams()
+  const planId = searchParams.get('plan')
+  
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -26,7 +30,12 @@ export default function SignupPage() {
       if (result.error) {
         setError(result.error.message || 'Failed to create account')
       } else {
-        window.location.href = '/dashboard'
+        // Redirect to billing if user selected pro plan
+        if (planId === 'pro') {
+          window.location.href = '/dashboard/billing'
+        } else {
+          window.location.href = '/dashboard'
+        }
       }
     } catch (err) {
       setError('An unexpected error occurred')
@@ -38,6 +47,7 @@ export default function SignupPage() {
   const handleGoogleSignIn = async () => {
     await authClient.signIn.social({
       provider: 'google',
+      callbackURL: planId === 'pro' ? '/dashboard/billing' : '/dashboard',
     })
   }
 
@@ -175,13 +185,22 @@ export default function SignupPage() {
         </div>
 
         {/* Footer */}
-        <p className="text-center text-text-muted text-sm mt-8">
-          By signing up, you agree to our{' '}
-          <Link href="/terms" className="underline hover:text-charcoal">Terms</Link>
-          {' '}and{' '}
-          <Link href="/privacy" className="underline hover:text-charcoal">Privacy Policy</Link>
-        </p>
+          <p className="text-center text-text-muted text-sm mt-8">
+            By signing up, you agree to our{' '}
+            <Link href="/terms" className="underline hover:text-charcoal">Terms</Link>
+            {' '}and{' '}
+            <Link href="/privacy" className="underline hover:text-charcoal">Privacy Policy</Link>
+          </p>
       </div>
     </div>
   )
 }
+
+export default function SignupPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-cream flex items-center justify-center"><p>Loading...</p></div>}>
+      <SignupContent />
+    </Suspense>
+  )
+}
+

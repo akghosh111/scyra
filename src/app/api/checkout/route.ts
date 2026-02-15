@@ -5,9 +5,7 @@ import { headers } from 'next/headers'
 import prisma from '@/lib/prisma'
 
 // Product IDs - Dodo Payments
-const PRODUCTS = {
-  PRO: 'pdt_0NYUd1mVCB0vEvtCFFj0r',
-}
+const PRODUCT_ID = process.env.NEXT_PUBLIC_PLAN_PRO_ID || 'pdt_0NYUd1mVCB0vEvtCFFj0r'
 
 export async function POST(req: NextRequest) {
   try {
@@ -24,35 +22,45 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { planId, productId } = await req.json()
-    console.log('Plan ID:', planId, 'Product ID:', productId)
+    const { planId, productId, email, name } = await req.json()
+    console.log('Plan ID:', planId, 'Product ID:', productId, 'Email:', email)
 
-    if (!planId || !productId) {
+    const actualProductId = productId || PRODUCT_ID
+
+    if (!planId || !actualProductId) {
       return NextResponse.json(
         { error: 'planId and productId are required' },
         { status: 400 }
       )
     }
 
-    // For Pro plan, create a subscription
+    // For Pro plan, create a subscription checkout session
     if (planId === 'pro') {
       const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-      console.log('Creating subscription with appUrl:', appUrl)
+      console.log('Creating checkout session with appUrl:', appUrl)
 
-      const subscription = await dodo.createSubscription({
-        product_id: productId,
+      // Use the customer email from session or request
+      const customerEmail = email || session.user.email
+      const customerName = name || session.user.name || undefined
+
+      const checkoutSession = await dodo.checkoutSessions.create({
+        product_cart: [
+          {
+            product_id: actualProductId,
+            quantity: 1,
+          },
+        ],
         customer: {
-          email: session.user.email,
-          name: session.user.name || undefined,
+          email: customerEmail,
+          name: customerName,
         },
         return_url: `${appUrl}/dashboard?checkout=success`,
       })
 
-      console.log('Subscription created:', subscription)
+      console.log('Checkout session created:', checkoutSession)
 
       return NextResponse.json({
-        checkoutUrl: subscription.checkout_url,
-        subscriptionId: subscription.id,
+        checkoutUrl: checkoutSession.checkout_url,
       })
     }
 
