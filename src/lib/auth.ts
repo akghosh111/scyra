@@ -1,11 +1,6 @@
 import { betterAuth } from "better-auth"
 import { prismaAdapter } from "better-auth/adapters/prisma"
-import { PrismaClient } from "@prisma/client"
-import { PrismaPg } from "@prisma/adapter-pg"
-import pg from "pg"
-
-const adapter = new PrismaPg(pg)
-const prisma = new PrismaClient({ adapter })
+import prisma from "./prisma"
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_VERCEL_URL || 'http://localhost:3000'
 const baseUrl = appUrl.startsWith('http') ? appUrl : `https://${appUrl}`
