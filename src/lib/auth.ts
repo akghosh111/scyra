@@ -7,7 +7,7 @@ import pg from "pg"
 const adapter = new PrismaPg(pg)
 const prisma = new PrismaClient({ adapter })
 
-const appUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.VERCEL_URL || 'http://localhost:3000'
+const appUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_VERCEL_URL || 'http://localhost:3000'
 const baseUrl = appUrl.startsWith('http') ? appUrl : `https://${appUrl}`
 
 export const auth = betterAuth({
@@ -22,9 +22,14 @@ export const auth = betterAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       enabled: true,
       redirectURI: `${baseUrl}/api/auth/callback/google`,
+      scope: ['openid', 'profile', 'email'],
     },
   },
   emailAndPassword: {
     enabled: true,
+    requireEmailVerification: false,
+  },
+  emailVerification: {
+    sendOnSignUp: false,
   },
 })
