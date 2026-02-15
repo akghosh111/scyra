@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { auth } from '@/lib/auth'
 
-export async function middleware(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
   
   // Skip auth routes
@@ -29,7 +29,7 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL('/login', request.url))
       }
     } catch (error) {
-      console.error('Middleware auth error:', error)
+      console.error('Proxy auth error:', error)
       // On error, redirect to login
       if (pathname.startsWith('/api/')) {
         return NextResponse.json(
