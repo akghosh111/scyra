@@ -15,18 +15,25 @@ export default function LoginPage() {
     setIsLoading(true)
     setError('')
     
+    console.log('Attempting sign in with email:', email)
+    
     try {
       const result = await authClient.signIn.email({
         email,
         password,
       })
       
+      console.log('Sign in result:', result)
+      
       if (result.error) {
+        console.error('Sign in error:', result.error)
         setError(result.error.message || 'Failed to sign in')
       } else {
+        console.log('Sign in successful')
         window.location.href = '/dashboard'
       }
     } catch (err) {
+      console.error('Sign in catch error:', err)
       setError('An unexpected error occurred')
     } finally {
       setIsLoading(false)

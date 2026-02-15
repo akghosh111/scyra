@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { auth } from '@/lib/auth'
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -10,15 +11,26 @@ export async function middleware(request: NextRequest) {
   }
   
   // Check if the route is protected
-  if (pathname.startsWith('/dashboard') || pathname.startsWith('/api/trends') || pathname.startsWith('/api/user')) {
-    // Check for any auth cookie (Better Auth uses different cookie names)
-    const cookies = request.cookies
-    const hasSession = cookies.get('better-auth.session') || 
-                       cookies.get('session') || 
-                       cookies.get('better-auth.session_token')
-    
-    if (!hasSession) {
-      // Redirect to login if no session
+  if (pathname.startsWith('/dashboard') || pathname.startsWith('/api/trends') || pathname.startsWith('/api/user') || pathname.startsWith('/api/checkout')) {
+    try {
+      // Use Better Auth API to check session
+      const session = await auth.api.getSession({
+        headers: request.headers
+      })
+      
+      if (!session) {
+        // No valid session
+        if (pathname.startsWith('/api/')) {
+          return NextResponse.json(
+            { error: 'Unauthorized' },
+            { status: 401 }
+          )
+        }
+        return NextResponse.redirect(new URL('/login', request.url))
+      }
+    } catch (error) {
+      console.error('Middleware auth error:', error)
+      // On error, redirect to login
       if (pathname.startsWith('/api/')) {
         return NextResponse.json(
           { error: 'Unauthorized' },
@@ -33,5 +45,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/api/trends/:path*', '/api/user/:path*', '/api/auth/:path*']
+  matcher: ['/dashboard/:path*', '/api/trends/:path*', '/api/user/:path*', '/api/checkout/:path*', '/api/portal/:path*', '/api/webhooks/:path*', '/api/auth/:path*']
 }
