@@ -2,12 +2,36 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import prisma from '@/lib/prisma'
 
+const addCORSHeaders = (response: NextResponse, origin: string | null) => {
+  const allowedOrigins = [
+    process.env.NEXT_PUBLIC_APP_URL,
+    process.env.NEXT_PUBLIC_VERCEL_URL,
+    'http://localhost:3000',
+    'https://scyra.vercel.app'
+  ].filter(Boolean)
+  
+  if (origin && allowedOrigins.includes(origin)) {
+    response.headers.set('Access-Control-Allow-Origin', origin)
+    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+    response.headers.set('Access-Control-Allow-Credentials', 'true')
+  }
+}
+
+export async function OPTIONS(req: NextRequest) {
+  const response = new NextResponse(null, { status: 200 })
+  addCORSHeaders(response, req.headers.get('origin'))
+  return response
+}
+
 export async function GET(req: NextRequest) {
   try {
     const session = await auth.api.getSession({ headers: req.headers })
     
     if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      const response = NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      addCORSHeaders(response, req.headers.get('origin'))
+      return response
     }
 
     // Get or create user profile
@@ -37,12 +61,16 @@ export async function GET(req: NextRequest) {
       })
     }
 
-    return NextResponse.json({ profile })
+    const response = NextResponse.json({ profile })
+    addCORSHeaders(response, req.headers.get('origin'))
+    return response
   } catch (error) {
     console.error('Profile error:', error)
-    return NextResponse.json(
+    const response = NextResponse.json(
       { error: 'Failed to fetch profile' },
       { status: 500 }
     )
+    addCORSHeaders(response, req.headers.get('origin'))
+    return response
   }
 }
