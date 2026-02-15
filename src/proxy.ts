@@ -5,13 +5,13 @@ import { auth } from '@/lib/auth'
 export default async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
   
-  // Skip auth routes
-  if (pathname.startsWith('/api/auth')) {
+  // Skip auth routes and checkout (checkout handles its own auth)
+  if (pathname.startsWith('/api/auth') || pathname.startsWith('/api/checkout')) {
     return NextResponse.next()
   }
   
   // Check if the route is protected
-  if (pathname.startsWith('/dashboard') || pathname.startsWith('/api/trends') || pathname.startsWith('/api/user') || pathname.startsWith('/api/checkout')) {
+  if (pathname.startsWith('/dashboard') || pathname.startsWith('/api/trends') || pathname.startsWith('/api/user')) {
     try {
       // Use Better Auth API to check session
       const session = await auth.api.getSession({
@@ -45,5 +45,5 @@ export default async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/api/trends/:path*', '/api/user/:path*', '/api/checkout/:path*', '/api/portal/:path*', '/api/webhooks/:path*', '/api/auth/:path*']
+  matcher: ['/dashboard/:path*', '/api/trends/:path*', '/api/user/:path*', '/api/portal/:path*', '/api/webhooks/:path*', '/api/auth/:path*', '/api/checkout/:path*']
 }

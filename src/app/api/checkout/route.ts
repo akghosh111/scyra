@@ -11,14 +11,22 @@ export async function POST(req: NextRequest) {
   try {
     console.log('Checkout API called')
 
+    // Get headers first
+    const reqHeaders = await headers()
+    console.log('Request headers:', {
+      cookie: reqHeaders.get('cookie'),
+      authorization: reqHeaders.get('authorization'),
+    })
+
     // Get current session
     const session = await auth.api.getSession({
-      headers: await headers(),
+      headers: reqHeaders,
     })
 
     console.log('Session:', session?.user?.email)
 
     if (!session || !session.user) {
+      console.error('Unauthorized - no session found')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -38,30 +46,51 @@ export async function POST(req: NextRequest) {
     if (planId === 'pro') {
       const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
       console.log('Creating checkout session with appUrl:', appUrl)
+      console.log('Dodo API key present:', !!process.env.DODO_API_KEY)
 
       // Use the customer email from session or request
       const customerEmail = email || session.user.email
       const customerName = name || session.user.name || undefined
 
-      const checkoutSession = await dodo.checkoutSessions.create({
-        product_cart: [
-          {
-            product_id: actualProductId,
-            quantity: 1,
+      console.log('Customer:', { email: customerEmail, name: customerName })
+
+      try {
+        const checkoutSession = await dodo.checkoutSessions.create({
+          product_cart: [
+            {
+              product_id: actualProductId,
+              quantity: 1,
+            },
+          ],
+          customer: {
+            email: customerEmail,
+            name: customerName,
           },
-        ],
-        customer: {
-          email: customerEmail,
-          name: customerName,
-        },
-        return_url: `${appUrl}/dashboard?checkout=success`,
-      })
+          return_url: `${appUrl}/dashboard?checkout=success`,
+        })
 
-      console.log('Checkout session created:', checkoutSession)
+        console.log('Checkout session created:', checkoutSession)
 
-      return NextResponse.json({
-        checkoutUrl: checkoutSession.checkout_url,
-      })
+        return NextResponse.json({
+          checkoutUrl: checkoutSession.checkout_url,
+        })
+      } catch (dodoError: any) {
+        console.error('Dodo API error:', dodoError)
+        console.error('Dodo error status:', dodoError.status)
+        console.error('Dodo error message:', dodoError.message)
+        console.error('Dodo error response:', dodoError.response)
+        
+        // Check if this is a 401 authentication error
+        if (dodoError.status === 401) {
+          console.error('Dodo API authentication error - check API key')
+          return NextResponse.json(
+            { error: 'Payment API authentication error. Please contact support.' },
+            { status: 500 }
+          )
+        }
+        
+        throw dodoError
+      }
     }
 
     return NextResponse.json(

@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from 'react'
 import FAQ from '@/components/FAQ'
 import Navbar from '@/components/Navbar'
 import { useRouter } from 'next/navigation'
+import { authClient } from '@/lib/auth-client'
 
 interface CardPosition {
   x: number
@@ -13,6 +14,7 @@ interface CardPosition {
 
 export default function Home() {
   const router = useRouter()
+  const { data: session } = authClient.useSession()
   const [mousePosition, setMousePosition] = useState({ x: -100, y: -100 })
   const heroRef = useRef<HTMLDivElement>(null)
   const [cards, setCards] = useState<CardPosition[]>([
@@ -27,12 +29,23 @@ export default function Home() {
 
   const handlePlanClick = async (planId: string) => {
     if (planId === 'free') {
-      router.push('/login')
+      // If logged in, go to dashboard, otherwise go to login
+      if (session?.user) {
+        router.push('/dashboard')
+      } else {
+        router.push('/login')
+      }
       return
     }
 
-    // For pro plan, redirect to signup with plan parameter
-    router.push(`/signup?plan=${planId}`)
+    // For pro plan, check if user is logged in
+    if (session?.user) {
+      // Already logged in, go directly to billing
+      router.push('/dashboard/billing')
+    } else {
+      // Not logged in, go to signup with plan parameter
+      router.push(`/signup?plan=${planId}`)
+    }
   }
 
   useEffect(() => {
