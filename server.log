@@ -1,0 +1,84 @@
+
+> frontend@1.0.0 dev
+> next dev
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.56.1:3000
+- Environments: .env
+
+✓ Starting...
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+✓ Ready in 1478ms
+ GET / 200 in 1908ms (compile: 1443ms, render: 465ms)
+[2m2026-02-14T13:16:12.985Z[0m [33mWARN[0m [1m[Better Auth]:[0m [better-auth] Warning: your BETTER_AUTH_SECRET appears low-entropy. Use a randomly generated secret for production.
+[2m2026-02-14T13:16:14.085Z[0m [33mWARN[0m [1m[Better Auth]:[0m [better-auth] Warning: your BETTER_AUTH_SECRET appears low-entropy. Use a randomly generated secret for production.
+ GET /api/auth/get-session 200 in 2.1s (compile: 1865ms, proxy.ts: 143ms, render: 82ms)
+ GET / 200 in 602ms (compile: 199ms, render: 403ms)
+(node:2784) Warning: SECURITY WARNING: The SSL modes 'prefer', 'require', and 'verify-ca' are treated as aliases for 'verify-full'.
+In the next major version (pg-connection-string v3.0.0 and pg v9.0.0), these modes will adopt standard libpq semantics, which have weaker security guarantees.
+
+To prepare for this change:
+- If you want the current behavior, explicitly use 'sslmode=verify-full'
+- If you want libpq compatibility now, use 'uselibpqcompat=true&sslmode=require'
+
+See https://www.postgresql.org/docs/current/libpq-ssl.html for libpq SSL mode definitions.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[2m2026-02-14T13:23:10.349Z[0m [33mWARN[0m [1m[Better Auth]:[0m [better-auth] Warning: your BETTER_AUTH_SECRET appears low-entropy. Use a randomly generated secret for production.
+ GET /api/auth/get-session 200 in 1773ms (compile: 58ms, proxy.ts: 28ms, render: 1688ms)
+ POST /api/auth/sign-out 200 in 298ms (compile: 45ms, proxy.ts: 17ms, render: 237ms)
+ GET / 200 in 236ms (compile: 17ms, render: 219ms)
+ GET /api/auth/get-session 200 in 46ms (compile: 14ms, proxy.ts: 18ms, render: 14ms)
+[2m2026-02-14T13:23:18.730Z[0m [33mWARN[0m [1m[Better Auth]:[0m [better-auth] Warning: your BETTER_AUTH_SECRET appears low-entropy. Use a randomly generated secret for production.
+ GET /api/auth/get-session 200 in 59ms (compile: 35ms, proxy.ts: 11ms, render: 12ms)
+[2m2026-02-14T13:23:22.782Z[0m [33mWARN[0m [1m[Better Auth]:[0m [better-auth] Warning: your BETTER_AUTH_SECRET appears low-entropy. Use a randomly generated secret for production.
+ GET /login 200 in 297ms (compile: 254ms, render: 43ms)
+[2m2026-02-14T13:23:29.160Z[0m [33mWARN[0m [1m[Better Auth]:[0m [better-auth] Warning: your BETTER_AUTH_SECRET appears low-entropy. Use a randomly generated secret for production.
+ POST /api/auth/sign-in/email 200 in 1291ms (compile: 52ms, proxy.ts: 10ms, render: 1229ms)
+ GET /api/auth/get-session 200 in 250ms (compile: 33ms, proxy.ts: 22ms, render: 194ms)
+[2m2026-02-14T13:23:30.741Z[0m [33mWARN[0m [1m[Better Auth]:[0m [better-auth] Warning: your BETTER_AUTH_SECRET appears low-entropy. Use a randomly generated secret for production.
+○ Compiling /dashboard ...
+[2m2026-02-14T13:23:36.441Z[0m [33mWARN[0m [1m[Better Auth]:[0m [better-auth] Warning: your BETTER_AUTH_SECRET appears low-entropy. Use a randomly generated secret for production.
+ GET /dashboard 200 in 8.1s (compile: 6.6s, proxy.ts: 18ms, render: 1421ms)
+ GET /api/user/profile 200 in 2.2s (compile: 1204ms, proxy.ts: 8ms, render: 988ms)
+ GET /dashboard/history 404 in 504ms (compile: 432ms, proxy.ts: 8ms, render: 64ms)
+ GET /dashboard/history 404 in 97ms (compile: 24ms, proxy.ts: 7ms, render: 66ms)
+ GET /dashboard 200 in 940ms (compile: 7ms, proxy.ts: 6ms, render: 928ms)
+  Reload env: .env
+[2m2026-02-14T13:38:51.247Z[0m [33mWARN[0m [1m[Better Auth]:[0m [better-auth] Warning: your BETTER_AUTH_SECRET appears low-entropy. Use a randomly generated secret for production.
+ GET / 200 in 855ms (compile: 771ms, render: 85ms)
+ GET /dashboard 200 in 2.4s (compile: 425ms, proxy.ts: 237ms, render: 1717ms)
+  Reload env: .env
+[2m2026-02-14T13:38:56.587Z[0m [33mWARN[0m [1m[Better Auth]:[0m [better-auth] Warning: your BETTER_AUTH_SECRET appears low-entropy. Use a randomly generated secret for production.
+ GET / 200 in 364ms (compile: 83ms, render: 281ms)
+  Reload env: .env
+[2m2026-02-14T13:38:57.578Z[0m [33mWARN[0m [1m[Better Auth]:[0m [better-auth] Warning: your BETTER_AUTH_SECRET appears low-entropy. Use a randomly generated secret for production.
+ GET /dashboard 200 in 1328ms (compile: 226ms, proxy.ts: 20ms, render: 1082ms)
+ GET / 200 in 283ms (compile: 84ms, render: 199ms)
+ GET /dashboard 200 in 959ms (compile: 184ms, proxy.ts: 15ms, render: 760ms)
+  Reload env: .env
+[2m2026-02-14T13:39:02.656Z[0m [33mWARN[0m [1m[Better Auth]:[0m [better-auth] Warning: your BETTER_AUTH_SECRET appears low-entropy. Use a randomly generated secret for production.
+ GET / 200 in 309ms (compile: 108ms, render: 201ms)
+ GET /dashboard 200 in 1028ms (compile: 215ms, proxy.ts: 31ms, render: 783ms)
+  Reload env: .env
+[2m2026-02-14T13:49:27.365Z[0m [33mWARN[0m [1m[Better Auth]:[0m [better-auth] Warning: your BETTER_AUTH_SECRET appears low-entropy. Use a randomly generated secret for production.
+  Reload env: .env
+ GET / 200 in 953ms (compile: 231ms, render: 723ms)
+[2m2026-02-14T13:49:28.055Z[0m [33mWARN[0m [1m[Better Auth]:[0m [better-auth] Warning: your BETTER_AUTH_SECRET appears low-entropy. Use a randomly generated secret for production.
+ GET / 200 in 489ms (compile: 89ms, render: 400ms)
+ GET /dashboard 200 in 2.6s (compile: 542ms, proxy.ts: 141ms, render: 1954ms)
+ GET /dashboard 200 in 1724ms (compile: 315ms, proxy.ts: 21ms, render: 1387ms)
+  Reload env: .env
+[2m2026-02-14T13:49:35.036Z[0m [33mWARN[0m [1m[Better Auth]:[0m [better-auth] Warning: your BETTER_AUTH_SECRET appears low-entropy. Use a randomly generated secret for production.
+ GET / 200 in 319ms (compile: 91ms, render: 228ms)
+ GET /dashboard 200 in 1055ms (compile: 230ms, proxy.ts: 19ms, render: 807ms)
+  Reload env: .env
+[2m2026-02-14T13:49:39.088Z[0m [33mWARN[0m [1m[Better Auth]:[0m [better-auth] Warning: your BETTER_AUTH_SECRET appears low-entropy. Use a randomly generated secret for production.
+ GET / 200 in 417ms (compile: 331ms, render: 85ms)
+ GET /dashboard 200 in 1158ms (compile: 215ms, proxy.ts: 18ms, render: 925ms)
+✓ Compiled in 905ms
+ GET / 200 in 1344ms (compile: 307ms, render: 1037ms)
+[2m2026-02-14T14:14:06.082Z[0m [33mWARN[0m [1m[Better Auth]:[0m [better-auth] Warning: your BETTER_AUTH_SECRET appears low-entropy. Use a randomly generated secret for production.
+[2m2026-02-14T14:14:07.339Z[0m [33mWARN[0m [1m[Better Auth]:[0m [better-auth] Warning: your BETTER_AUTH_SECRET appears low-entropy. Use a randomly generated secret for production.
+ GET /api/auth/get-session 200 in 2.7s (compile: 1281ms, proxy.ts: 76ms, render: 1363ms)
+[?25h
