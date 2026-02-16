@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     switch (event_type) {
       case 'subscription.created':
       case 'subscription.activated': {
-        // New Pro subscription created - user gets 100 credits monthly
+        // New Pro subscription created - user gets 50 credits monthly
         const { id: subscription_id, customer_id, product_id } = data
         const email = data.customer?.email
 
@@ -31,9 +31,9 @@ export async function POST(req: NextRequest) {
           return NextResponse.json({ error: 'User not found' }, { status: 404 })
         }
 
-        // Check if product_id matches Pro plan ($25/month subscription)
+        // Check if product_id matches Pro plan ($12/month subscription, 50 credits)
         if (product_id === 'pdt_0NYUd1mVCB0vEvtCFFj0r') {
-          const creditsPerMonth = 100
+          const creditsPerMonth = 50
 
           await prisma.userProfile.update({
             where: { userId: user.id },
@@ -52,9 +52,9 @@ export async function POST(req: NextRequest) {
       }
 
       case 'subscription.renewed': {
-        // Monthly renewal - reset credits to 100 for Pro plan
+        // Monthly renewal - reset credits to 50 for Pro plan
         const { id: subscription_id, customer_id } = data
-        const creditsPerMonth = 100
+        const creditsPerMonth = 50
 
         await prisma.userProfile.updateMany({
           where: { dodoCustomerId: customer_id, plan: 'PRO' },

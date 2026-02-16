@@ -47,7 +47,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (searchParams.get('checkout') === 'success') {
-      setSuccess('Upgrade successful! You have been upgraded to the Pro plan with 100 credits.')
+      setSuccess('Upgrade successful! You have been upgraded to the Pro plan with 50 credits.')
     }
   }, [searchParams])
 
