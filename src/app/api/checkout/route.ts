@@ -9,20 +9,34 @@ const PRODUCT_ID = process.env.NEXT_PUBLIC_PLAN_PRO_ID || 'pdt_0NYUd1mVCB0vEvtCF
 
 export async function POST(req: NextRequest) {
   try {
-    console.log('Checkout API called')
-
+    console.log('=== CHECKOUT API START ===')
+    
     // Log environment info
     console.log('Environment:', {
       nodeEnv: process.env.NODE_ENV,
       appUrl: process.env.NEXT_PUBLIC_APP_URL,
       hasDodoApiKey: !!process.env.DODO_PAYMENTS_API_KEY,
-      dodoApiKeyPrefix: process.env.DODO_PAYMENTS_API_KEY?.substring(0, 10) + '...',
+      dodoApiKeyPrefix: process.env.DODO_PAYMENTS_API_KEY?.substring(0, 15) + '...',
+      dodoApiKeyLength: process.env.DODO_PAYMENTS_API_KEY?.length,
     })
+
+    // Validate that dodo client is properly initialized
+    try {
+      const testConfig = (dodo as any)._options
+      console.log('Dodo client config:', {
+        hasBearerToken: !!testConfig?.bearerToken,
+        bearerTokenPrefix: testConfig?.bearerToken?.substring(0, 15) + '...',
+        environment: testConfig?.environment,
+        baseURL: testConfig?.baseURL,
+      })
+    } catch (e) {
+      console.error('Failed to read dodo client config:', e)
+    }
 
     // Get headers first
     const reqHeaders = await headers()
     console.log('Request headers:', {
-      cookie: reqHeaders.get('cookie'),
+      cookie: reqHeaders.get('cookie') ? 'present' : 'missing',
       authorization: reqHeaders.get('authorization'),
     })
 
@@ -80,33 +94,66 @@ export async function POST(req: NextRequest) {
       console.log('Checkout payload:', JSON.stringify(checkoutPayload, null, 2))
 
       try {
+        console.log('Calling Dodo API...')
         const checkoutSession = await dodo.checkoutSessions.create(checkoutPayload)
 
-        console.log('Checkout session created successfully:', {
+        console.log('Dodo API response:', {
           hasCheckoutUrl: !!checkoutSession.checkout_url,
+          hasSessionId: !!checkoutSession.session_id,
+          sessionId: checkoutSession.session_id,
         })
 
+        if (!checkoutSession.checkout_url) {
+          throw new Error('Dodo API returned a session but no checkout_url')
+        }
+
+        console.log('=== CHECKOUT API SUCCESS ===')
         return NextResponse.json({
           checkoutUrl: checkoutSession.checkout_url,
         })
       } catch (dodoError: any) {
-        console.error('Dodo API error:', dodoError)
+        console.error('=== DODO API ERROR ===')
         console.error('Dodo error type:', dodoError.constructor.name)
         console.error('Dodo error status:', dodoError.status)
         console.error('Dodo error message:', dodoError.message)
-        console.error('Dodo error response:', dodoError.response)
-        console.error('Dodo error cause:', dodoError.cause)
+        console.error('Dodo error name:', dodoError.name)
+        console.error('Dodo error type:', dodoError.type)
+        console.error('Dodo error stack:', dodoError.stack)
+        
+        // Try to get more error details
+        if (dodoError.response) {
+          console.error('Dodo error response:', dodoError.response)
+          try {
+            const parsedResponse = JSON.stringify(dodoError.response, null, 2)
+            console.error('Parsed error response:', parsedResponse)
+          } catch (e) {
+            console.error('Could not parse error response')
+          }
+        }
+        
+        if (dodoError.cause) {
+          console.error('Dodo error cause:', dodoError.cause)
+        }
+        
+        console.error('Full error object:', dodoError)
         
         // Check if this is a 401 authentication error
         if (dodoError.status === 401) {
-          console.error('Dodo API authentication error - check API key')
+          console.error('Dodo API authentication error - check API key and environment')
           return NextResponse.json(
             { error: 'Payment API authentication error. Please contact support.' },
             { status: 500 }
           )
         }
         
-        throw dodoError
+        // Return generic error but with the actual error message for debugging
+        const errorMessage = dodoError.message || `Dodo API error (status: ${dodoError.status || 'unknown'})`
+        
+        console.error('=== END DODO API ERROR ===')
+        return NextResponse.json(
+          { error: errorMessage },
+          { status: 500 }
+        )
       }
     }
 
@@ -115,8 +162,10 @@ export async function POST(req: NextRequest) {
       { status: 400 }
     )
   } catch (error: any) {
+    console.error('=== CHECKOUT API GENERAL ERROR ===')
     console.error('Checkout error:', error)
     console.error('Error details:', error.message, error.stack)
+    console.error('Error type:', error.constructor.name)
     return NextResponse.json(
       { error: error.message || 'Failed to create checkout session' },
       { status: 500 }
