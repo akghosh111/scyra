@@ -142,96 +142,70 @@ export default function BillingPage() {
           <div>
             <div className="flex items-center gap-3 mb-2">
               <span className="text-4xl font-bold text-charcoal">
-                Pro
+                {profile?.plan === 'PRO' ? 'Pro' : 'No active plan'}
               </span>
-              <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
-                Active
-              </span>
+              {profile?.plan === 'PRO' ? (
+                <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+                  Active
+                </span>
+              ) : (
+                <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium">
+                  Inactive
+                </span>
+              )}
             </div>
             <p className="text-text-secondary">
-              {profile?.credits} of {profile?.totalCreditLimit} credits remaining this month
+              {profile?.plan === 'PRO' 
+                ? `${profile?.credits} of ${profile?.totalCreditLimit} credits remaining this month`
+                : 'Purchase a plan to start generating trends'
+              }
             </p>
           </div>
           <div className="flex gap-4">
-            <a
-              href="/history"
-              className="px-6 py-3 bg-charcoal/10 text-charcoal rounded-full font-medium hover:bg-charcoal/20 transition-all"
-            >
-              View Usage
-            </a>
+            {profile?.plan === 'PRO' && (
+              <a
+                href="/dashboard/history"
+                className="px-6 py-3 bg-charcoal/10 text-charcoal rounded-full font-medium hover:bg-charcoal/20 transition-all"
+              >
+                View Usage
+              </a>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Credit Usage */}
-      <div className="card-soft rounded-3xl p-8">
-        <h2 className="text-2xl font-serif text-charcoal mb-6">Credit Usage This Month</h2>
-        <div className="space-y-4">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-text-secondary">Credits Used</span>
-            <span className="text-charcoal font-semibold">
-              {profile?.totalCreditLimit && profile?.credits
-                ? (profile.totalCreditLimit - profile.credits).toLocaleString()
-                : 0}{' '}
-              / {profile?.totalCreditLimit || 0}
-            </span>
-          </div>
-          <div className="h-4 bg-black/5 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-gradient-to-r from-amber-400 to-orange-400 rounded-full transition-all duration-500"
-              style={{
-                width: profile?.totalCreditLimit && profile?.credits
-                  ? ((profile.totalCreditLimit - profile.credits) / profile.totalCreditLimit) * 100
-                  : 0,
-              }}
-            />
-          </div>
-          <div className="flex justify-between text-xs text-text-muted">
-            <span>0</span>
-            <span>Credits reset on billing date</span>
-            <span>{profile?.totalCreditLimit || 0}</span>
-          </div>
-          <div className="flex gap-4">
-            <a
-              href="/history"
-              className="px-6 py-3 bg-charcoal/10 text-charcoal rounded-full font-medium hover:bg-charcoal/20 transition-all"
-            >
-              View Usage
-            </a>
+      {/* Credit Usage - Only show for PRO users */}
+      {profile?.plan === 'PRO' && (
+        <div className="card-soft rounded-3xl p-8">
+          <h2 className="text-2xl font-serif text-charcoal mb-6">Credit Usage This Month</h2>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-text-secondary">Credits Used</span>
+              <span className="text-charcoal font-semibold">
+                {profile?.totalCreditLimit && profile?.credits
+                  ? (profile.totalCreditLimit - profile.credits).toLocaleString()
+                  : 0}{' '}
+                / {profile?.totalCreditLimit || 0}
+              </span>
+            </div>
+            <div className="h-4 bg-black/5 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-amber-400 to-orange-400 rounded-full transition-all duration-500"
+                style={{
+                  width: profile?.totalCreditLimit && profile?.credits
+                    ? ((profile.totalCreditLimit - profile.credits) / profile.totalCreditLimit) * 100
+                    : 0,
+                }}
+              />
+            </div>
+            <div className="flex justify-between text-xs text-text-muted">
+              <span>0</span>
+              <span>Pro plan: Credits reset on billing date</span>
+              <span>{profile?.totalCreditLimit || 0}</span>
+            </div>
           </div>
         </div>
-      </div>
-
-      {/* Credit Usage */}
-      <div className="card-soft rounded-3xl p-8">
-        <h2 className="text-2xl font-serif text-charcoal mb-6">Credit Usage This Month</h2>
-        <div className="space-y-4">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-text-secondary">Credits Used</span>
-            <span className="text-charcoal font-semibold">
-              {profile?.totalCreditLimit && profile?.credits
-                ? (profile.totalCreditLimit - profile.credits).toLocaleString()
-                : 0}{' '}
-              / {profile?.totalCreditLimit || 0}
-            </span>
-          </div>
-          <div className="h-4 bg-black/5 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-gradient-to-r from-amber-400 to-orange-400 rounded-full transition-all duration-500"
-              style={{
-                width: profile?.totalCreditLimit && profile?.credits
-                  ? ((profile.totalCreditLimit - profile.credits) / profile.totalCreditLimit) * 100
-                  : 0,
-              }}
-            />
-          </div>
-          <div className="flex justify-between text-xs text-text-muted">
-            <span>0</span>
-            <span>Pro plan: Credits reset on billing date</span>
-            <span>{profile?.totalCreditLimit || 0}</span>
-          </div>
-        </div>
-      </div>
+      )}
 
       {/* Available Plans */}
       <div className="card-soft rounded-3xl p-8">

@@ -13,7 +13,7 @@ interface DashboardHeaderProps {
 
 export default function DashboardHeader({ user }: DashboardHeaderProps) {
   const [credits, setCredits] = useState<number>(0)
-  const [plan, setPlan] = useState<string>('PRO')
+  const [plan, setPlan] = useState<string>('NONE')
 
   useEffect(() => {
     // Fetch user profile
@@ -27,6 +27,12 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
       })
       .catch(console.error)
   }, [])
+
+  const getPlanDisplay = (planType: string) => {
+    if (planType === 'PRO') return 'Pro'
+    if (planType === 'NONE') return 'No plan'
+    return 'No plan'
+  }
 
   return (
     <header className="bg-white border-b border-black/5 px-8 py-4 flex items-center justify-between">
@@ -52,7 +58,7 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
         {/* Plan */}
         <div className="px-4 py-2 bg-charcoal/5 rounded-xl">
           <p className="text-sm text-text-muted">Current Plan</p>
-          <p className="font-bold text-charcoal">{plan}</p>
+          <p className="font-bold text-charcoal">{getPlanDisplay(plan)}</p>
         </div>
 
         {/* Upgrade button */}

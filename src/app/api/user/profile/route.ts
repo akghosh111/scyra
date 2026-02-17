@@ -40,23 +40,13 @@ export async function GET(req: NextRequest) {
     })
 
     if (!profile) {
-      // Auto-create profile on first login
+      // Auto-create profile on first login - 0 credits until purchase
       profile = await prisma.userProfile.create({
         data: {
           userId: session.user.id,
-          plan: 'PRO',
-          credits: 50,
-          totalCreditLimit: 50,
-        }
-      })
-
-      // Create initial credit transaction
-      await prisma.creditTransaction.create({
-        data: {
-          userId: session.user.id,
-          amount: 50,
-          type: 'CREDIT',
-          reason: 'Initial Pro plan credits'
+          plan: 'NONE',
+          credits: 0,
+          totalCreditLimit: 0,
         }
       })
     }
