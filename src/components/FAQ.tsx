@@ -54,6 +54,10 @@ export default function FAQ() {
       question: 'How accurate are the trend predictions?',
       answer: 'We measure velocity, engagement, and discussion quality to rank trends. While no prediction is perfect, our users report significantly higher engagement when creating content around detected trends.',
     },
+    {
+      question: 'What happens to unused credits?',
+      answer: 'Unused credits will roll over to next month if you continue your subscription. This ensures you always get full value from your monthly credit allocation.',
+    },
   ]
 
   return (

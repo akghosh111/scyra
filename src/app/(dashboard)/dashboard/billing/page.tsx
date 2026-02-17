@@ -327,37 +327,6 @@ export default function BillingPage() {
         </div>
       </div>
 
-      {/* FAQ Section */}
-      <div className="card-soft rounded-3xl p-8">
-        <h2 className="text-2xl font-serif text-charcoal mb-6">Frequently Asked Questions</h2>
-        <div className="space-y-4">
-          <div className="border-b border-black/5 pb-4">
-            <h3 className="font-semibold text-charcoal mb-2">What happens if I run out of credits?</h3>
-            <p className="text-text-secondary">
-              Your credits automatically reset on your monthly billing date. If you run out before your reset, you can still use the app but won't be able to generate new trends until credits renew.
-            </p>
-          </div>
-          <div className="border-b border-black/5 pb-4">
-            <h3 className="font-semibold text-charcoal mb-2">Can I cancel anytime?</h3>
-            <p className="text-text-secondary">
-              Yes! You can cancel your Pro subscription anytime. After cancellation, you'll keep access until the end of your current billing period, then return to the Free plan.
-            </p>
-          </div>
-          <div className="border-b border-black/5 pb-4">
-            <h3 className="font-semibold text-charcoal mb-2">Do unused credits rollover?</h3>
-            <p className="text-text-secondary">
-              No, credits reset each month. We recommend using your credits before your renewal date to get the most value from your subscription.
-            </p>
-          </div>
-          <div>
-            <h3 className="font-semibold text-charcoal mb-2">How secure is my payment information?</h3>
-            <p className="text-text-secondary">
-              We use industry-standard encryption and payment processors to ensure your payment information is always secure. We never store your card details on our servers.
-            </p>
-          </div>
-        </div>
-      </div>
-
       {/* Support CTA */}
       <div className="bg-gradient-warm rounded-3xl p-8 md:p-12 text-center">
         <h3 className="text-2xl md:text-3xl font-serif text-white mb-4">Need help choosing a plan?</h3>
