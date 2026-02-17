@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
       }
 
       case 'subscription.canceled': {
-        // Pro subscription canceled - downgrade to Free plan
+        // Pro subscription canceled - keep data but clear customer ID
         const { customer_id } = data
 
         const profile = await prisma.userProfile.findFirst({
@@ -80,14 +80,12 @@ export async function POST(req: NextRequest) {
           await prisma.userProfile.update({
             where: { id: profile.id },
             data: {
-              plan: 'FREE',
-              credits: 5, // Back to free plan default
-              totalCreditLimit: 5,
+              plan: 'PRO',
               dodoCustomerId: null, // Clear Dodo customer ID
             },
           })
 
-          console.log(`Subscription canceled for user ${profile.userId} - downgraded to Free`)
+          console.log(`Subscription canceled for user ${profile.userId} - customer ID cleared`)
         }
 
         return NextResponse.json({ success: true })

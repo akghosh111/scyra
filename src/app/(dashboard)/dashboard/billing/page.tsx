@@ -4,18 +4,6 @@ import { useEffect, useState } from 'react'
 
 const PLANS = [
   {
-    id: 'free',
-    name: 'Free',
-    price: '$0',
-    pricePerMonth: '$0/month',
-    description: 'Perfect for trying it out',
-    features: [
-      '5 trend scans (lifetime)',
-      'Basic trend clustering',
-    ],
-    creditLimit: 5,
-  },
-  {
     id: 'pro',
     name: 'Pro',
     price: '$12',
@@ -93,13 +81,6 @@ export default function BillingPage() {
         return
       }
 
-      // Free plan is already free, no action needed if trying to "upgrade" to it
-      if (planId === 'free') {
-        setSuccess('Already on the Free plan.')
-        setIsUpgrading(false)
-        return
-      }
-
       if (planId === 'pro') {
         console.log('Creating checkout session for Pro plan...')
         const response = await fetch('/api/checkout', {
@@ -161,7 +142,7 @@ export default function BillingPage() {
           <div>
             <div className="flex items-center gap-3 mb-2">
               <span className="text-4xl font-bold text-charcoal">
-                {profile?.plan === 'FREE' ? 'Free' : profile?.plan}
+                Pro
               </span>
               <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
                 Active
@@ -207,7 +188,7 @@ export default function BillingPage() {
           </div>
           <div className="flex justify-between text-xs text-text-muted">
             <span>0</span>
-            <span>Pro plan: Credits reset on billing date</span>
+            <span>Credits reset on billing date</span>
             <span>{profile?.totalCreditLimit || 0}</span>
           </div>
           <div className="flex gap-4">
@@ -257,7 +238,7 @@ export default function BillingPage() {
         <h2 className="text-2xl font-serif text-charcoal mb-2">Choose Your Plan</h2>
         <p className="text-text-secondary mb-8">Select the plan that fits your content needs</p>
 
-        <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+        <div className="grid md:grid-cols-1 gap-6 max-w-3xl mx-auto">
           {PLANS.map((plan) => (
             <div
               key={plan.id}
@@ -297,7 +278,7 @@ export default function BillingPage() {
 
               <button
                 onClick={() => handleUpgrade(plan.id)}
-                disabled={(isUpgrading && selectedPlan === plan.id) || (plan.id === 'free' && profile?.plan === 'FREE')}
+                disabled={(isUpgrading && selectedPlan === plan.id)}
                 className={`w-full py-3 rounded-full font-medium transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed ${
                   plan.featured
                     ? 'bg-amber-400 text-charcoal hover:bg-amber-300 shadow-lg'
@@ -316,10 +297,8 @@ export default function BillingPage() {
                   </span>
                 ) : profile?.plan === plan.id.toUpperCase() ? (
                   'Current Plan'
-                ) : plan.id === 'free' ? (
-                  'Already Free'
                 ) : (
-                  'Upgrade Now'
+                  'Subscribe Now'
                 )}
               </button>
             </div>

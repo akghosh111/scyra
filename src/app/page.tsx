@@ -28,16 +28,6 @@ export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null)
 
   const handlePlanClick = async (planId: string) => {
-    if (planId === 'free') {
-      // If logged in, go to dashboard, otherwise go to login
-      if (session?.user) {
-        router.push('/dashboard')
-      } else {
-        router.push('/login')
-      }
-      return
-    }
-
     // For pro plan, check if user is logged in
     if (session?.user) {
       // Already logged in, go directly to billing
@@ -597,22 +587,12 @@ export default function Home() {
                 </span>
               </h2>
               <p className="text-text-secondary">
-                Start free. Upgrade when you're ready.
+                Start your journey today.
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <div className="grid md:grid-cols-1 gap-8 max-w-4xl mx-auto">
               {[
-                {
-                  id: 'free',
-                  name: 'Free',
-                  price: '$0',
-                  period: '/month',
-                  description: 'Perfect for trying it out',
-                  features: ['5 trend scans (lifetime)', 'Basic trend clustering'],
-                  cta: 'Get started',
-                  popular: false,
-                },
                 {
                   id: 'pro',
                   name: 'Pro',
@@ -620,7 +600,7 @@ export default function Home() {
                   period: '/month',
                   description: 'For serious creators',
                   features: ['50 trend scans/month', 'Auto-renews monthly', 'Advanced AI insights', 'Weekly trend reports', 'Content idea generator', 'Priority support'],
-                  cta: 'Upgrade to Pro',
+                  cta: 'Get started',
                   popular: true,
                 },
               ].map((plan, index) => (
@@ -701,7 +681,7 @@ export default function Home() {
                   Join thousands of creators who never run out of content ideas.
                 </p>
                 <button className="px-8 py-4 bg-white text-charcoal rounded-full font-medium text-lg hover:shadow-2xl transition-all duration-150 hover:scale-105">
-                  Get started for free
+                  Get started
                 </button>
               </div>
             </div>

@@ -13,7 +13,7 @@ interface DashboardHeaderProps {
 
 export default function DashboardHeader({ user }: DashboardHeaderProps) {
   const [credits, setCredits] = useState<number>(0)
-  const [plan, setPlan] = useState<string>('FREE')
+  const [plan, setPlan] = useState<string>('PRO')
 
   useEffect(() => {
     // Fetch user profile

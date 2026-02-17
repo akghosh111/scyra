@@ -44,9 +44,9 @@ export async function GET(req: NextRequest) {
       profile = await prisma.userProfile.create({
         data: {
           userId: session.user.id,
-          plan: 'FREE',
-          credits: 5,
-          totalCreditLimit: 5,
+          plan: 'PRO',
+          credits: 50,
+          totalCreditLimit: 50,
         }
       })
 
@@ -54,9 +54,9 @@ export async function GET(req: NextRequest) {
       await prisma.creditTransaction.create({
         data: {
           userId: session.user.id,
-          amount: 5,
+          amount: 50,
           type: 'CREDIT',
-          reason: 'Initial FREE plan credits'
+          reason: 'Initial Pro plan credits'
         }
       })
     }
