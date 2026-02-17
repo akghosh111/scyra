@@ -171,6 +171,14 @@ export async function POST(req: NextRequest) {
             ...trendAnalysis,
             searchStrategy,
             summary: trendSummary,
+            stats: {
+              sourcesAnalyzed: exaResults.length,
+              trendingVelocity: trendAnalysis.stats.trendingVelocity,
+              engagementScore: trendAnalysis.stats.engagementScore,
+              contentGaps: trendAnalysis.stats.contentGaps,
+              sites: searchStrategy.sites || [],
+              forums: searchStrategy.forums || []
+            },
             timestamp: new Date().toISOString()
           } as any
         }
