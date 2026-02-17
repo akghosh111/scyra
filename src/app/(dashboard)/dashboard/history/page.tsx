@@ -30,6 +30,13 @@ interface TrendResult {
     trendingVelocity: number
     engagementScore: number
     contentGaps: number
+    sites: string[]
+    forums: string[]
+  }
+  insights: {
+    drivingFactor: string
+    commonQuestions: string[]
+    missingContent: string[]
   }
 }
 
@@ -200,6 +207,29 @@ export default function HistoryPage() {
                     </div>
                   </div>
 
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="card-soft rounded-xl p-4">
+                      <h4 className="font-semibold text-charcoal mb-3">Top Sources</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {(item.result as TrendResult)?.stats?.sites?.slice(0, 6).map((site, i) => (
+                          <span key={i} className="px-3 py-1.5 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                            {site}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="card-soft rounded-xl p-4">
+                      <h4 className="font-semibold text-charcoal mb-3">Active Communities</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {(item.result as TrendResult)?.stats?.forums?.slice(0, 6).map((forum, i) => (
+                          <span key={i} className="px-3 py-1.5 bg-orange-100 text-orange-800 rounded-full text-sm font-medium">
+                            {forum}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
                   <div>
                     <h4 className="font-semibold text-charcoal mb-3">Top Themes</h4>
                     <div className="space-y-3">
@@ -246,6 +276,38 @@ export default function HistoryPage() {
                           </div>
                         </div>
                       ))}
+                    </div>
+                  </div>
+
+                  <div className="card-soft rounded-xl p-6">
+                    <h4 className="font-semibold text-charcoal mb-4">Key Insights</h4>
+                    <div className="space-y-4">
+                      <div>
+                        <h5 className="text-sm font-semibold text-charcoal mb-2">What is Driving Conversations?</h5>
+                        <p className="text-text-secondary text-sm">{(item.result as TrendResult)?.insights?.drivingFactor}</p>
+                      </div>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div>
+                          <h5 className="text-sm font-semibold text-charcoal mb-2">Common Questions</h5>
+                          <ul className="space-y-1">
+                            {(item.result as TrendResult)?.insights?.commonQuestions?.slice(0, 4).map((q, i) => (
+                              <li key={i} className="flex items-start gap-2 text-text-secondary text-sm">
+                                <span>-</span>{q}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div>
+                          <h5 className="text-sm font-semibold text-charcoal mb-2">Content Gaps</h5>
+                          <ul className="space-y-1">
+                            {(item.result as TrendResult)?.insights?.missingContent?.slice(0, 4).map((gap, i) => (
+                              <li key={i} className="flex items-start gap-2 text-text-secondary text-sm">
+                                <span>-</span>{gap}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
