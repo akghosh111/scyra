@@ -307,20 +307,41 @@ export default function Home() {
             <div className="grid md:grid-cols-3 gap-8">
               {[
                 {
-                  icon: '🔎',
-                  gradient: 'icon-gradient-1',
+                  icon: (
+                    <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10"/>
+                      <path d="M2 12h20"/>
+                      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1-4-10z"/>
+                    </svg>
+                  ),
+                  bgGradient: 'from-amber-50 to-orange-100',
+                  borderColor: 'border-amber-200',
+                  accentColor: 'text-amber-600',
                   title: 'Scan the web',
                   description: 'We monitor Reddit, blogs, forums, and news sites to detect emerging conversations in real-time.',
                 },
                 {
-                  icon: '📊',
-                  gradient: 'icon-gradient-2',
+                  icon: (
+                    <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M3 3v18h18"/>
+                      <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/>
+                    </svg>
+                  ),
+                  bgGradient: 'from-blue-50 to-indigo-100',
+                  borderColor: 'border-blue-200',
+                  accentColor: 'text-blue-600',
                   title: 'Detect patterns',
                   description: 'Our AI identifies recurring themes, debates, and viral moments as they start gaining traction.',
                 },
                 {
-                  icon: '💡',
-                  gradient: 'icon-gradient-3',
+                  icon: (
+                    <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                    </svg>
+                  ),
+                  bgGradient: 'from-purple-50 to-pink-100',
+                  borderColor: 'border-purple-200',
+                  accentColor: 'text-purple-600',
                   title: 'Generate ideas',
                   description: 'Turn trend data into ready-to-post content ideas for threads, reels, blogs, and videos.',
                 },
@@ -329,10 +350,12 @@ export default function Home() {
                   key={index} 
                   className="text-center group cursor-pointer"
                 >
-                  <div className={`w-16 h-16 ${feature.gradient} rounded-2xl flex items-center justify-center text-2xl mx-auto mb-6 transition-all duration-150 group-hover:scale-110 group-hover:rotate-3 shadow-lg group-hover:shadow-xl`}>
-                    {feature.icon}
+                  <div className={`w-20 h-20 bg-gradient-to-br ${feature.bgGradient} ${feature.borderColor} border-2 rounded-2xl flex items-center justify-center mx-auto mb-6 transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl`}>
+                    <span className={feature.accentColor}>
+                      {feature.icon}
+                    </span>
                   </div>
-                  <h3 className="text-xl font-serif text-charcoal mb-3 transition-colors duration-150 group-hover:text-charcoal-light">{feature.title}</h3>
+                  <h3 className="text-xl font-serif text-charcoal mb-3 transition-colors duration-300 group-hover:text-charcoal-light">{feature.title}</h3>
                   <p className="text-text-secondary">{feature.description}</p>
                 </div>
               ))}
