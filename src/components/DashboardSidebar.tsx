@@ -31,11 +31,11 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
   return (
     <aside className="w-72 bg-cream/50 backdrop-blur-sm border-r border-charcoal/5 flex flex-col">
       {/* Logo */}
-      <div className="p-8 border-b border-charcoal/10">
+      <div className="p-6 border-b border-charcoal/10">
         <Link 
           href="/"
-          className="text-3xl font-serif text-charcoal tracking-wide inline-block font-bold"
-          style={{ letterSpacing: '0.2em' }}
+          className="text-2xl font-black text-charcoal tracking-widest inline-block hover:scale-105 transition-transform"
+          style={{ fontFamily: 'system-ui, -apple-system, sans-serif', letterSpacing: '0.15em' }}
         >
           SCYRA
         </Link>
